@@ -21,7 +21,7 @@ def read_data():
 
 def training():
   global training_set
-  number_of_rows     = 5
+  number_of_rows     = len(training_set)
   number_of_features = 16
   training_set       = training_set[:number_of_rows]
 
@@ -45,8 +45,9 @@ def training():
     # update weights
     weights0 += np.dot(inputs.T,l1_delta)
 
-  print "Output After Training:"
-  print l1
+  print "Error After Training:"
+  l1 = np.matrix.round(l1)
+  error = np.matrix.mean(outputs - l1)*100
 
 
 # sigmoid function
