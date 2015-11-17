@@ -15,8 +15,8 @@ def read_data():
     lines              = list(csv.reader(f))
     file_size          = len(lines)
     training_set       = lines[:int(file_size*0.6)]
-    generalization_set = lines[int(file_size*0.6*1):int(file_size*0.8)]
-    validation_set     = lines[int(file_size*0.8*1):]
+    generalization_set = lines[int(file_size*0.6):int(file_size*0.8)]
+    validation_set     = lines[int(file_size*0.8):]
 
 
 def training():
