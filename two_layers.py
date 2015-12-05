@@ -1,9 +1,9 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
 
 import numpy as np
 
 def training():
-  inputs  = np.array([[0,0,1], [0,1,1], [1,0,1], [1,1,1] ])
+  inputs  = np.array([[0,0,1], [0,1,1], [1,0,1], [1,1,1]])
   outputs = np.array([[0,0,1,1]]).T
 
   np.random.seed(1)
