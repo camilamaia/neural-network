@@ -16,42 +16,42 @@ UNKNOWN_TOKEN        = "UNKNOWN_TOKEN"
 SENTENCE_START_TOKEN = "SENTENCE_START"
 SENTENCE_END_TOKEN   = "SENTENCE_END"
 
-# class RNNNumpy:
+class RNNNumpy:
 
-#   def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
-#     # Assign instance variables
-#     self.word_dim = word_dim
-#     self.hidden_dim = hidden_dim
-#     self.bptt_truncate = bptt_truncate
-#     # Randomly initialize the network parameters
-#     self.U = np.random.uniform(-np.sqrt(1./word_dim), np.sqrt(1./word_dim), (hidden_dim, word_dim))
-#     self.V = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (word_dim, hidden_dim))
-#     self.W = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (hidden_dim, hidden_dim))
+  def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
+    # Assign instance variables
+    self.word_dim = word_dim
+    self.hidden_dim = hidden_dim
+    self.bptt_truncate = bptt_truncate
+    # Randomly initialize the network parameters
+    self.U = np.random.uniform(-np.sqrt(1./word_dim), np.sqrt(1./word_dim), (hidden_dim, word_dim))
+    self.V = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (word_dim, hidden_dim))
+    self.W = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (hidden_dim, hidden_dim))
 
-#   def softmax(self, x):
-#     xt = np.exp(x - np.max(x))
-#     return xt / np.sum(xt)
+  def softmax(self, x):
+    xt = np.exp(x - np.max(x))
+    return xt / np.sum(xt)
 
-#   def forward_propagation(self, x):
-#     # The total number of time steps
-#     T = len(x)
-#     # During forward propagation we save all hidden states in s because need them later.
-#     # We add one additional element for the initial hidden, which we set to 0
-#     s = np.zeros((T + 1, self.hidden_dim))
-#     s[-1] = np.zeros(self.hidden_dim)
-#     # The outputs at each time step. Again, we save them for later.
-#     o = np.zeros((T, self.word_dim))
-#     # For each time step...
-#     for t in np.arange(T):
-#       # Note that we are indxing U by x[t]. This is the same as multiplying U with a one-hot vector.
-#       s[t] = np.tanh(self.U[:,x[t]] + self.W.dot(s[t-1]))
-#       o[t] = softmax(self.V.dot(s[t]))
-#     return [o, s]
+  def forward_propagation(self, x):
+    # The total number of time steps
+    T = len(x)
+    # During forward propagation we save all hidden states in s because need them later.
+    # We add one additional element for the initial hidden, which we set to 0
+    s = np.zeros((T + 1, self.hidden_dim))
+    s[-1] = np.zeros(self.hidden_dim)
+    # The outputs at each time step. Again, we save them for later.
+    o = np.zeros((T, self.word_dim))
+    # For each time step...
+    for t in np.arange(T):
+      # Note that we are indxing U by x[t]. This is the same as multiplying U with a one-hot vector.
+      s[t] = np.tanh(self.U[:,x[t]] + self.W.dot(s[t-1]))
+      o[t] = self.softmax(self.V.dot(s[t]))
+    return [o, s]
 
-#   def predict(self, x):
-#     # Perform forward propagation and return index of the highest score
-#     o, s = self.forward_propagation(x)
-#     return np.argmax(o, axis=1)
+  def predict(self, x):
+    # Perform forward propagation and return index of the highest score
+    o, s = self.forward_propagation(x)
+    return np.argmax(o, axis=1)
 
 
 # Read the data and append SENTENCE_START and SENTENCE_END tokens
@@ -92,9 +92,9 @@ print "\nExample sentence after Pre-processing: '%s'" % tokenized_sentences[0]
 X_train = np.asarray([[word_to_index[w] for w in sent[:-1]] for sent in tokenized_sentences])
 y_train = np.asarray([[word_to_index[w] for w in sent[1:]] for sent in tokenized_sentences])
 
-# if __name__ == "__main__":
-#   np.random.seed(10)
-#   model = RNNNumpy(VOCABULARY_SIZE)
-#   o, s = model.forward_propagation(X_train[10])
-#   print o.shape
-#   print o
+if __name__ == "__main__":
+  np.random.seed(10)
+  model = RNNNumpy(VOCABULARY_SIZE)
+  o, s = model.forward_propagation(X_train[10])
+  print o.shape
+  print o
