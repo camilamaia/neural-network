@@ -53,6 +53,22 @@ class RNNNumpy:
     o, s = self.forward_propagation(x)
     return np.argmax(o, axis=1)
 
+  def calculate_total_loss(self, x, y):
+      L = 0
+      # For each sentence...
+      for i in np.arange(len(y)):
+          o, s = self.forward_propagation(x[i])
+          # We only care about our prediction of the "correct" words
+          correct_word_predictions = o[np.arange(len(y[i])), y[i]]
+          # Add to the loss based on how off we were
+          L += -1 * np.sum(np.log(correct_word_predictions))
+      return L
+
+  def calculate_loss(self, x, y):
+      # Divide the total loss by the number of training examples
+      N = np.sum((len(y_i) for y_i in y))
+      return self.calculate_total_loss(x,y)/N
+
 
 # Read the data and append SENTENCE_START and SENTENCE_END tokens
 print "Reading CSV file..."
@@ -98,3 +114,11 @@ if __name__ == "__main__":
   o, s = model.forward_propagation(X_train[10])
   print o.shape
   print o
+
+  predictions = model.predict(X_train[10])
+  print predictions.shape
+  print predictions
+
+  # Limit to 1000 examples to save time
+  print "Expected Loss for random predictions: %f" % np.log(VOCABULARY_SIZE)
+  print "Actual loss: %f" % model.calculate_loss(X_train[:1000], y_train[:1000])
